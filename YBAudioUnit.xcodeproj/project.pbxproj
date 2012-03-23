@@ -9,8 +9,8 @@
 /* Begin PBXBuildFile section */
 		102C5F3C151C2EDC00ED46A2 /* YBParameterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 102C5F3A151C2EDC00ED46A2 /* YBParameterViewController.m */; };
 		102C5F3D151C2EDC00ED46A2 /* YBParameterViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 102C5F3B151C2EDC00ED46A2 /* YBParameterViewController.xib */; };
-		102C5F41151C370E00ED46A2 /* YBTremeloFilter.h in Headers */ = {isa = PBXBuildFile; fileRef = 102C5F3F151C370E00ED46A2 /* YBTremeloFilter.h */; };
-		102C5F42151C370E00ED46A2 /* YBTremeloFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 102C5F40151C370E00ED46A2 /* YBTremeloFilter.m */; };
+		102C5F41151C370E00ED46A2 /* YBTremoloFilter.h in Headers */ = {isa = PBXBuildFile; fileRef = 102C5F3F151C370E00ED46A2 /* YBTremoloFilter.h */; };
+		102C5F42151C370E00ED46A2 /* YBTremoloFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 102C5F40151C370E00ED46A2 /* YBTremoloFilter.m */; };
 		10307CEA151B846300D7C22B /* congaloop.caf in Resources */ = {isa = PBXBuildFile; fileRef = 10307CE9151B846300D7C22B /* congaloop.caf */; };
 		10307CF3151B9F1D00D7C22B /* YBMultiChannelMixer.h in Headers */ = {isa = PBXBuildFile; fileRef = 10307CF1151B9F1D00D7C22B /* YBMultiChannelMixer.h */; };
 		10307CF4151B9F1D00D7C22B /* YBMultiChannelMixer.m in Sources */ = {isa = PBXBuildFile; fileRef = 10307CF2151B9F1D00D7C22B /* YBMultiChannelMixer.m */; };
@@ -74,8 +74,8 @@
 		102C5F39151C2EDC00ED46A2 /* YBParameterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YBParameterViewController.h; sourceTree = "<group>"; };
 		102C5F3A151C2EDC00ED46A2 /* YBParameterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YBParameterViewController.m; sourceTree = "<group>"; };
 		102C5F3B151C2EDC00ED46A2 /* YBParameterViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = YBParameterViewController.xib; sourceTree = "<group>"; };
-		102C5F3F151C370E00ED46A2 /* YBTremeloFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YBTremeloFilter.h; sourceTree = "<group>"; };
-		102C5F40151C370E00ED46A2 /* YBTremeloFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YBTremeloFilter.m; sourceTree = "<group>"; };
+		102C5F3F151C370E00ED46A2 /* YBTremoloFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YBTremoloFilter.h; sourceTree = "<group>"; };
+		102C5F40151C370E00ED46A2 /* YBTremoloFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YBTremoloFilter.m; sourceTree = "<group>"; };
 		10307CE9151B846300D7C22B /* congaloop.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = congaloop.caf; sourceTree = "<group>"; };
 		10307CF1151B9F1D00D7C22B /* YBMultiChannelMixer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YBMultiChannelMixer.h; sourceTree = "<group>"; };
 		10307CF2151B9F1D00D7C22B /* YBMultiChannelMixer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YBMultiChannelMixer.m; sourceTree = "<group>"; };
@@ -180,8 +180,8 @@
 			children = (
 				10307CFA151C100B00D7C22B /* YBDistortionFilter.h */,
 				10307CFB151C100B00D7C22B /* YBDistortionFilter.m */,
-				102C5F3F151C370E00ED46A2 /* YBTremeloFilter.h */,
-				102C5F40151C370E00ED46A2 /* YBTremeloFilter.m */,
+				102C5F3F151C370E00ED46A2 /* YBTremoloFilter.h */,
+				102C5F40151C370E00ED46A2 /* YBTremoloFilter.m */,
 			);
 			name = Effects;
 			sourceTree = "<group>";
@@ -335,7 +335,7 @@
 				10FCBF16151952550046CA54 /* YBAudioFilePlayer.h in Headers */,
 				10307CF3151B9F1D00D7C22B /* YBMultiChannelMixer.h in Headers */,
 				10307CFC151C100B00D7C22B /* YBDistortionFilter.h in Headers */,
-				102C5F41151C370E00ED46A2 /* YBTremeloFilter.h in Headers */,
+				102C5F41151C370E00ED46A2 /* YBTremoloFilter.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -480,7 +480,7 @@
 				10FCBF17151952550046CA54 /* YBAudioFilePlayer.m in Sources */,
 				10307CF4151B9F1D00D7C22B /* YBMultiChannelMixer.m in Sources */,
 				10307CFD151C100B00D7C22B /* YBDistortionFilter.m in Sources */,
-				102C5F42151C370E00ED46A2 /* YBTremeloFilter.m in Sources */,
+				102C5F42151C370E00ED46A2 /* YBTremoloFilter.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

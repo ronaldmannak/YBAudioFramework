@@ -10,6 +10,6 @@
 
 extern const OSType kAudioUnitSubType_Tremolo;
 
-@interface YBTremeloFilter : YBAudioUnitNode
+@interface YBTremoloFilter : YBAudioUnitNode
 
 @end

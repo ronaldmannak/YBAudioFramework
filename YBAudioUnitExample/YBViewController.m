@@ -23,7 +23,7 @@
     YBAudioUnitGraph *graph;
     YBMultiChannelMixer *mixerNode;
     YBDistortionFilter *distortionFilter;
-    YBTremeloFilter *tremoloFilter;
+    YBTremoloFilter *tremoloFilter;
     YBAudioFilePlayer *guitarPlayerNode;
     YBAudioFilePlayer *bandPlayerNode;
 }

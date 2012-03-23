@@ -6,13 +6,13 @@
 //  Copyright (c) 2012 Yobble. All rights reserved.
 //
 
-#import "YBTremeloFilter.h"
+#import "YBTremoloFilter.h"
 #import "YBAudioException.h"
 #import "YBAudioComponent.h"
 
 const OSType kAudioUnitSubType_Tremolo = 'trlo';
 
-@implementation YBTremeloFilter
+@implementation YBTremoloFilter
 
 static AudioComponent TremoloComponent = NULL;
 static AudioComponentPlugInInterface* TremoloPluginFactory(const AudioComponentDescription *inDesc);
