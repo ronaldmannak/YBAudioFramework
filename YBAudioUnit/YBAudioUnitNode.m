@@ -12,18 +12,15 @@
 #import "YBAudioUnitGraph.h"
 #import "YBAudioException.h"
 #import "YBAudioUtils.h"
-
-@interface YBAudioUnitGraph (Internal)
-- (AUGraph)AUGraph;
-@end
+#import <objc/runtime.h>
 
 @interface YBAudioUnitNode (Internal)
 - (id)initWithAUNode:(AUNode)auNode audioUnit:(AudioUnit)auAudioUnit inGraph:(YBAudioUnitGraph *)graph;
-- (AUNode)AUNode;
-- (AudioUnit)audioUnit;
 @end
 
-@implementation YBAudioUnitNode
+@implementation YBAudioUnitNode {
+    __weak YBAudioUnitGraph *_graph; // nodes are retained by its _graph, hence __weak
+}
 
 - (id)init {
     [NSException raise:@"YBAudioUnitNode" format:@"Please use -[YBAudioUnitGraph -addNodeWithType:] to create new nodes!"];
@@ -48,6 +45,29 @@
     return _auAudioUnit;
 }
 
++ (BOOL)resolveParameterAccessor:(YBParameterAccessorDescription)parameterAccessorDescription {
+    char *types;
+    IMP imp;
+    AudioUnitParameterID paramID = parameterAccessorDescription.paramID;
+    AudioUnitScope scope = parameterAccessorDescription.scope;
+    AudioUnitElement element = parameterAccessorDescription.element;
+    if (parameterAccessorDescription.isSetter) {
+        types = "v@:f";
+        imp = imp_implementationWithBlock((__bridge void*)(^(id _self, AudioUnitParameterValue value){
+            YBAudioThrowIfErr(AudioUnitSetParameter([_self audioUnit], paramID, scope, element, value, 0));
+        }));
+    } else {
+        types = "f@:";
+        imp = imp_implementationWithBlock((__bridge void*)(^(id _self, ...){
+            AudioUnitParameterValue value;
+            YBAudioThrowIfErr(AudioUnitGetParameter([_self audioUnit], paramID, scope, element, &value));
+            return value;
+        }));
+    }
+    class_addMethod([self class], parameterAccessorDescription.sel, imp, types);
+    return YES;
+}
+
 - (void)connectInput:(AudioUnitElement)inBus toOutput:(AudioUnitElement)outBus ofNode:(YBAudioUnitNode*)outNode {
     [_graph connectInput:inBus ofNode:self toOutput:outBus ofNode:outNode];
 }
@@ -58,6 +78,10 @@
 
 - (void)disconnectInput:(AudioUnitElement)inBus {
     [_graph disconnectInput:inBus ofNode:self];
+}
+
+- (void)reset {
+    YBAudioThrowIfErr(AudioUnitReset(_auAudioUnit, kAudioUnitScope_Global, 0));
 }
 
 #pragma mark - Property accessors:

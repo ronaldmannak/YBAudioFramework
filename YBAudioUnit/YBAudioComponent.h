@@ -30,6 +30,8 @@ typedef enum {
     YBAudioComponentTypeiPodEQ,
     YBAudioComponentTypeNBandEQ,
     
+    YBAudioComponentTypeTremolo,
+    
     /** Mixers */
     YBAudioComponentTypeMultiChannelMixer,
     YBAudioComponentType3DMixerEmbedded,
@@ -47,5 +49,7 @@ typedef enum {
     YBAudioComponentTypeVoiceProcessingIO
     
 } YBAudioComponentType;
+
+extern const OSType kAudioUnitManufacturer_Yobble;
 
 @interface YBAudioComponent : NSObject @end

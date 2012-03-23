@@ -28,7 +28,6 @@
     @package
     AUNode _auNode;
     AudioUnit _auAudioUnit;
-    __weak YBAudioUnitGraph *_graph; // nodes are retained by its _graph, hence __weak
 }
 
 /**
@@ -43,8 +42,11 @@
 - (void)connectOutput:(AudioUnitElement)outBus toInput:(AudioUnitElement)inBus ofNode:(YBAudioUnitNode*)inNode;
 - (void)disconnectInput:(AudioUnitElement)inBus;
 
+- (void)reset;
+
 /**
     Accessors for the MaximumFramesPerSlice property
+    This property can only be set BEFORE the mixer's is connected / initialized.
 	@see kAudioUnitProperty_MaximumFramesPerSlice
  */
 @property (nonatomic, readwrite, assign) UInt32 maximumFramesPerSlice;
@@ -53,6 +55,7 @@
 	Accessor for the Bypass property, YES indicating the unit's processing should be bypassed
     @see kAudioUnitProperty_BypassEffect
  */
+// TODO: turning bypass on/off seems to work only once...?
 @property (nonatomic, readwrite, assign) BOOL bypass;
 
 /**
@@ -80,3 +83,19 @@
 @end
 
 
+@interface YBAudioUnitNode (LowerLevel)
+- (AUNode)AUNode;
+- (AudioUnit)audioUnit;
+@end
+
+
+@interface YBAudioUnitNode (DynamicParameterAccessorResolution)
+typedef struct {
+    SEL sel;
+    AudioUnitParameterID paramID;
+    AudioUnitScope scope;
+    AudioUnitElement element;
+    BOOL isSetter;
+} YBParameterAccessorDescription;
++ (BOOL)resolveParameterAccessor:(YBParameterAccessorDescription)parameterAccessorDescription;
+@end

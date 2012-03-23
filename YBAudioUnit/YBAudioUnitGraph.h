@@ -50,8 +50,9 @@
 
 /**
     Method to add a new audio component nodes to the receiver base on a component type identifier.
+    The returned object will an instance of YBAudioUnitNode or inherit from that class.
  */
-- (YBAudioUnitNode*)addNodeWithType:(YBAudioComponentType)type;
+- (id)addNodeWithType:(YBAudioComponentType)type;
 
 /**
     Method to remove a node from the receiver.
@@ -88,5 +89,6 @@
 
 - (YBAudioUnitNode*)addNodeWithAUDescription:(AudioComponentDescription *)description;
 - (YBAudioUnitNode*)addNodeWithAUDescription:(AudioComponentDescription *)description wrapperClass:(Class)nodeClass;
+- (AUGraph)AUGraph;
 
 @end

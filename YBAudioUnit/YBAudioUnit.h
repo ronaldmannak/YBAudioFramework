@@ -8,6 +8,15 @@
 
 extern NSString* YBAudioUnitErrorDomain;
 
+// Core Classes:
 #import "YBAudioUnitGraph.h"
 #import "YBAudioUnitNode.h"
+#import "YBAudioComponent.h"
 #import "YBAudioException.h"
+
+// Unit Classes:
+#import "YBScheduledSoundPlayer.h"
+#import "YBAudioFilePlayer.h"
+#import "YBMultiChannelMixer.h"
+#import "YBDistortionFilter.h"
+#import "YBTremeloFilter.h"

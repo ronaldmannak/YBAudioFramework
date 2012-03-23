@@ -67,6 +67,9 @@ const char* YBAudioGetErrorStringFromOSStatus(OSStatus error) {
         case kAUGraphErr_InvalidAudioUnit:
             return "kAUGraphErr_InvalidAudioUnit";
             
+        case 561211770:
+            return "kAudioHardwareBadPropertySizeError";
+            
     }
     return "Not an AudioUnit error code...";
 }

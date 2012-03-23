@@ -13,10 +13,6 @@
 
 NSString* YBAudioUnitErrorDomain = @"YBAudioUnitErrorDomain";
 
-@interface YBAudioUnitGraph (Internal)
-- (AUGraph)AUGraph;
-@end
-
 @interface YBAudioComponent (Internal)
 + (void)fillOutComponentDescription:(AudioComponentDescription*)description withType:(YBAudioComponentType)type;
 + (Class)wrapperClassForComponentType:(YBAudioComponentType)type;
@@ -24,7 +20,6 @@ NSString* YBAudioUnitErrorDomain = @"YBAudioUnitErrorDomain";
 
 @interface YBAudioUnitNode (Internal)
 - (id)initWithAUNode:(AUNode)auNode audioUnit:(AudioUnit)auAudioUnit inGraph:(YBAudioUnitGraph *)graph;
-- (AUNode)AUNode;
 @end
 
 @implementation YBAudioUnitGraph {
@@ -149,7 +144,7 @@ NSString* YBAudioUnitErrorDomain = @"YBAudioUnitErrorDomain";
     return (float)maxCpuLoad;
 }
 
-- (AUGraph)UGraph {
+- (AUGraph)AUGraph {
     return _auGraph;
 }
 

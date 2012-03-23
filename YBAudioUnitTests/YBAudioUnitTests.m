@@ -3,12 +3,16 @@
 //  YBAudioUnitTests
 //
 //  Created by Martijn Thé on 3/20/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//  Copyright (c) 2012 Yobble. All rights reserved.
 //
 
 #import "YBAudioUnitTests.h"
 #import "YBAudioUnit.h"
 #import "YBAudioUtils.h"
+#import "YBAudioFilePlayer.h"
+
+#import <AudioToolbox/AudioToolbox.h>
+#import <AVFoundation/AVFoundation.h>
 
 #define YBTestsGraphWithNodeType(graph, node, type) \
 YBAudioUnitGraph* graph = [[YBAudioUnitGraph alloc] init]; \
@@ -51,6 +55,7 @@ YBAudioUnitNode* node = [graph addNodeWithType:type];
     STAssertTrue([graph isRunning] == NO, nil);
     STAssertTrue(kvoBool == NO, nil);
     [graph removeNode:node];
+    [graph removeObserver:self forKeyPath:@"running"];
 }
 
 - (void)testMaximumFramesPerSliceAccessors {
@@ -94,7 +99,7 @@ YBAudioUnitNode* node = [graph addNodeWithType:type];
 
 - (void)testBusCountAccessors {
     YBTestsGraphWithNodeType(graph, ioNode, YBAudioComponentTypeRemoteIO);
-    YBAudioUnitNode *mixerNode = [graph addNodeWithType:YBAudioComponentTypeMultiChannelMixer];
+    YBMultiChannelMixer *mixerNode = [graph addNodeWithType:YBAudioComponentTypeMultiChannelMixer];
     YBAudioUnitNode *playerNode1 = [graph addNodeWithType:YBAudioComponentTypeAudioFilePlayer];
     YBAudioUnitNode *playerNode2 = [graph addNodeWithType:YBAudioComponentTypeAudioFilePlayer];
     [mixerNode setBusCount:2 scope:kAudioUnitScope_Input];
@@ -137,6 +142,38 @@ YBAudioUnitNode* node = [graph addNodeWithType:type];
     maxCPULoad = [graph maxCPULoad];
     STAssertTrue(CPULoad >= 0.f, nil);
     STAssertTrue(maxCPULoad >= 0.f, nil);
+}
+
+- (void)testAudioFilePlayerUnit {
+    YBTestsGraphWithNodeType(graph, ioNode, YBAudioComponentTypeRemoteIO);
+    YBAudioFilePlayer *playerNode = (YBAudioFilePlayer*)[graph addNodeWithType:YBAudioComponentTypeAudioFilePlayer];
+    [ioNode connectInput:0 toOutput:0 ofNode:playerNode];
+    NSURL *fileURL = [[NSBundle bundleForClass:[self class]] URLForResource:@"guitar" withExtension:@"m4a"];
+    [playerNode setFileURL:fileURL typeHint:kAudioFileM4AType];
+    [playerNode scheduleEntireFilePrimeAndStartImmediately];
+    [graph start];
+    // Let it play for a very short time:
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.1]];
+}
+
+- (void)testMixerUnit {
+    YBTestsGraphWithNodeType(graph, ioNode, YBAudioComponentTypeRemoteIO);
+    YBMultiChannelMixer *mixerNode = [graph addNodeWithType:YBAudioComponentTypeMultiChannelMixer];
+    [mixerNode setBusCount:1 scope:kAudioUnitScope_Input];
+    [mixerNode connectOutput:0 toInput:0 ofNode:ioNode];
+    [graph start];
+    [mixerNode setBalance:-1 forBus:0];
+    [graph updateSynchronous];
+    [mixerNode setVolume:0.5 forBus:0];
+    [graph updateSynchronous];
+    [mixerNode setInputEnabled:NO forBus:0];
+    [graph updateSynchronous];
+    [mixerNode setInputEnabled:YES forBus:0];
+    [graph updateSynchronous];
+    [mixerNode setVolume:2.0 forBus:0];
+    [graph updateSynchronous];
+    [mixerNode setBalance:1 forBus:0];
+    [graph updateSynchronous];
 }
 
 @end

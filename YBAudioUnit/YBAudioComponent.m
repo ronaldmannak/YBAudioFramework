@@ -6,11 +6,10 @@
 //  Copyright (c) 2012 Yobble. All rights reserved.
 //
 
-#import "YBAudioComponent.h"
-#import "YBAudioUnitNode.h"
-#import "YBScheduledSoundPlayer.h"
-#import "YBAudioFilePlayer.h"
+#import "YBAudioUnit.h"
 #import <AudioUnit/AudioUnit.h>
+
+const OSType kAudioUnitManufacturer_Yobble = 'ybbl';
 
 @interface YBAudioComponent (Internal)
 + (void)fillOutComponentDescription:(AudioComponentDescription*)description withType:(YBAudioComponentType)type;
@@ -49,6 +48,8 @@
         case YBAudioComponentTypeiPodEQ            : { description->componentType = kAudioUnitType_Effect; description->componentSubType = kAudioUnitSubType_AUiPodEQ; return; }
         case YBAudioComponentTypeNBandEQ           : { description->componentType = kAudioUnitType_Effect; description->componentSubType = kAudioUnitSubType_NBandEQ; return; }
         
+        case YBAudioComponentTypeTremolo           : { description->componentManufacturer = kAudioUnitManufacturer_Yobble; description->componentType = kAudioUnitType_Effect; description->componentSubType = kAudioUnitSubType_Tremolo; return; }
+            
         /** Mixers */
         case YBAudioComponentTypeMultiChannelMixer : { description->componentType = kAudioUnitType_Mixer; description->componentSubType = kAudioUnitSubType_MultiChannelMixer; return; }
         case YBAudioComponentType3DMixerEmbedded   : { description->componentType = kAudioUnitType_Mixer; description->componentSubType = kAudioUnitSubType_AU3DMixerEmbedded; return; }
@@ -69,8 +70,15 @@
 
 + (Class)wrapperClassForComponentType:(YBAudioComponentType)type {
     switch (type) {
+        /** Effects */
+        case YBAudioComponentTypeDistortion: return [YBDistortionFilter class];
+        /** Mixers */
+        case YBAudioComponentTypeMultiChannelMixer: return [YBMultiChannelMixer class];
+            
+        /** Generators */
         case YBAudioComponentTypeScheduledSoundPlayer: return [YBScheduledSoundPlayer class];
         case YBAudioComponentTypeAudioFilePlayer: return [YBAudioFilePlayer class];
+            
         default: return [YBAudioUnitNode class];
     }
 }
