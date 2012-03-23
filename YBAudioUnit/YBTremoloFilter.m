@@ -33,7 +33,16 @@ static OSStatus Initialize(void *self, ...) {
     return noErr;
 }
 
+static OSStatus Default(void *self, ...) {
+    return noErr;
+}
+
+static OSStatus SetProperty(void *self, ...) {
+    return noErr;
+}
+
 static OSStatus Render(AudioUnit inUnit, AudioUnitRenderActionFlags  *ioActionFlags, const AudioTimeStamp *inTimeStamp, UInt32                      inOutputBusNumber, UInt32 inNumberFrames, AudioBufferList *ioData) {
+    
     return noErr;
 }
 
@@ -51,7 +60,10 @@ static AudioComponentMethod Lookup(SInt16 selector) {
         case kAudioUnitInitializeSelect: return (AudioComponentMethod) &Initialize;
         case kAudioUnitUninitializeSelect: return (AudioComponentMethod) &Uninitialize;
         case kAudioUnitRenderSelect: return (AudioComponentMethod) &Render;
+        case kAudioUnitSetPropertySelect: return (AudioComponentMethod) &SetProperty;
     }
+    
+    return (AudioComponentMethod) &Default;
     
     /*
      kAudioUnitRange							= 0x0000,	// range of selectors for audio units

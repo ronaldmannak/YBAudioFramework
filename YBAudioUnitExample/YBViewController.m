@@ -46,8 +46,10 @@
     distortionFilter.delay = 500.;
     [distortionFilter connectOutput:0 toInput:0 ofNode:mixerNode];
     
+//    Work in progres...:
 //    tremoloFilter = [graph addNodeWithType:YBAudioComponentTypeTremolo];
-    
+//    [tremoloFilter connectOutput:0 toInput:0 ofNode:mixerNode];
+
     {   // Guitar file player:
         guitarPlayerNode = [graph addNodeWithType:YBAudioComponentTypeAudioFilePlayer];
         [guitarPlayerNode connectOutput:0 toInput:0 ofNode:distortionFilter];
