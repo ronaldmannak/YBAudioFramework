@@ -7,7 +7,6 @@
 //
 
 #import "YBDistortionFilter.h"
-#import "YBAudioException.h"
 #import "YBAudioUtils.h"
 
 @implementation YBDistortionFilter

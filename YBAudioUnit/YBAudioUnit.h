@@ -20,3 +20,4 @@ extern NSString* YBAudioUnitErrorDomain;
 #import "YBMultiChannelMixer.h"
 #import "YBDistortionFilter.h"
 #import "YBTremoloFilter.h"
+#import "YBVarispeedConverter.h"

@@ -59,6 +59,8 @@
 		10307CF4151B9F1D00D7C22B /* YBMultiChannelMixer.m in Sources */ = {isa = PBXBuildFile; fileRef = 10307CF2151B9F1D00D7C22B /* YBMultiChannelMixer.m */; };
 		10307CFC151C100B00D7C22B /* YBDistortionFilter.h in Headers */ = {isa = PBXBuildFile; fileRef = 10307CFA151C100B00D7C22B /* YBDistortionFilter.h */; };
 		10307CFD151C100B00D7C22B /* YBDistortionFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 10307CFB151C100B00D7C22B /* YBDistortionFilter.m */; };
+		105A6EEA1532DF4A004475B5 /* YBVarispeedConverter.h in Headers */ = {isa = PBXBuildFile; fileRef = 105A6EE81532DF4A004475B5 /* YBVarispeedConverter.h */; };
+		105A6EEB1532DF4A004475B5 /* YBVarispeedConverter.m in Sources */ = {isa = PBXBuildFile; fileRef = 105A6EE91532DF4A004475B5 /* YBVarispeedConverter.m */; };
 		10D759431518E94B0011BF3E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 10D759421518E94B0011BF3E /* Foundation.framework */; };
 		10D759511518E94B0011BF3E /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 10D759501518E94B0011BF3E /* SenTestingKit.framework */; };
 		10D759531518E94B0011BF3E /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 10D759521518E94B0011BF3E /* UIKit.framework */; };
@@ -167,6 +169,8 @@
 		10307CF2151B9F1D00D7C22B /* YBMultiChannelMixer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YBMultiChannelMixer.m; sourceTree = "<group>"; };
 		10307CFA151C100B00D7C22B /* YBDistortionFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YBDistortionFilter.h; sourceTree = "<group>"; };
 		10307CFB151C100B00D7C22B /* YBDistortionFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YBDistortionFilter.m; sourceTree = "<group>"; };
+		105A6EE81532DF4A004475B5 /* YBVarispeedConverter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YBVarispeedConverter.h; sourceTree = "<group>"; };
+		105A6EE91532DF4A004475B5 /* YBVarispeedConverter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YBVarispeedConverter.m; sourceTree = "<group>"; };
 		10D7593F1518E94B0011BF3E /* libYBAudioUnit.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libYBAudioUnit.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		10D759421518E94B0011BF3E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		10D759461518E94B0011BF3E /* YBAudioUnit-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "YBAudioUnit-Prefix.pch"; sourceTree = "<group>"; };
@@ -329,6 +333,15 @@
 			name = Effects;
 			sourceTree = "<group>";
 		};
+		105A6EE61532DEE1004475B5 /* Converters */ = {
+			isa = PBXGroup;
+			children = (
+				105A6EE81532DF4A004475B5 /* YBVarispeedConverter.h */,
+				105A6EE91532DF4A004475B5 /* YBVarispeedConverter.m */,
+			);
+			name = Converters;
+			sourceTree = "<group>";
+		};
 		10D759341518E94B0011BF3E = {
 			isa = PBXGroup;
 			children = (
@@ -372,6 +385,7 @@
 				10307CF9151C0FF700D7C22B /* Effects */,
 				10307CF0151B9EFB00D7C22B /* Mixers */,
 				10FCBF0F151951DD0046CA54 /* Generators */,
+				105A6EE61532DEE1004475B5 /* Converters */,
 				10FCBF0E151951D30046CA54 /* Core */,
 				10D759451518E94B0011BF3E /* Supporting Files */,
 			);
@@ -507,6 +521,7 @@
 				102C618B151C4DD000ED46A2 /* CAAtomic.h in Headers */,
 				102C618F151C4DEA00ED46A2 /* CAHostTimeBase.h in Headers */,
 				102C6193151C4EC700ED46A2 /* AUBaseHelper.h in Headers */,
+				105A6EEA1532DF4A004475B5 /* YBVarispeedConverter.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -669,6 +684,7 @@
 				102C6186151C4D3600ED46A2 /* CAAudioChannelLayout.cpp in Sources */,
 				102C618E151C4DEA00ED46A2 /* CAHostTimeBase.cpp in Sources */,
 				102C6192151C4EC700ED46A2 /* AUBaseHelper.cpp in Sources */,
+				105A6EEB1532DF4A004475B5 /* YBVarispeedConverter.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
