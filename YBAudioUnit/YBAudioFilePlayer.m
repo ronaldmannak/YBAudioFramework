@@ -17,7 +17,9 @@
 @implementation YBAudioFilePlayer {
     AudioFileID _audioFileID;
     ScheduledAudioFileRegion _region;
+    AudioStreamBasicDescription _unitASBD;
     AudioStreamBasicDescription _fileASBD;
+    Float64 _sampleRateRatio;
     UInt64 _filePacketsCount;
 }
 
@@ -35,7 +37,7 @@
         currentPlayTime.mSampleTime = 0;
     }
     currentPlayTime.mFlags = kAudioTimeStampSampleTimeValid;
-    currentPlayTime.mSampleTime += _region.mStartFrame;
+    currentPlayTime.mSampleTime += _sampleRateRatio * (Float64)_region.mStartFrame;
     return currentPlayTime;
 }
 
@@ -67,6 +69,12 @@
         // Get file's asbd:
         propsize = sizeof(_fileASBD);
         YBAudioThrowIfErr(AudioFileGetProperty(_audioFileID, kAudioFilePropertyDataFormat, &propsize, &_fileASBD));
+        
+        // Get unit's asbd:
+        propsize = sizeof(_fileASBD);
+        AudioUnitGetProperty(_auAudioUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Output, 0, &_unitASBD, &propsize);
+        
+        _sampleRateRatio = _unitASBD.mSampleRate / _fileASBD.mSampleRate;
     }
 }
 
@@ -88,7 +96,7 @@
 - (void)rescheduleEntireFileBeginningAtPlaybackTime:(AudioTimeStamp)timestamp {
     [self unschedule];
     NSAssert((timestamp.mFlags & kAudioTimeStampSampleTimeValid), nil);
-    [self resetRegionToEntireFileWithStartFrame:timestamp.mSampleTime];
+    [self resetRegionToEntireFileWithStartFrame:timestamp.mSampleTime / _sampleRateRatio];
     YBAudioThrowIfErr(AudioUnitSetProperty(_auAudioUnit, kAudioUnitProperty_ScheduledFileRegion, kAudioUnitScope_Global, 0, &_region, sizeof(_region)));
     [self primeBuffers];
 }
