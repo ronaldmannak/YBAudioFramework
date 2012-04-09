@@ -18,6 +18,7 @@
 @implementation YBViewController {
     __weak IBOutlet UIButton *startStopButton;
     __weak IBOutlet UILabel *timeLabel;
+    __weak IBOutlet UIButton *playPauseButton;
     NSTimer *timer;
     
     YBAudioUnitGraph *graph;
@@ -80,6 +81,7 @@
 
 - (void)viewDidUnload {
     timeLabel = nil;
+    playPauseButton = nil;
     [super viewDidUnload];
     startStopButton = nil;
     graph = nil;
@@ -133,8 +135,22 @@
 - (IBAction)rescheduleAction:(id)sender {
     [guitarPlayerNode unschedule];
     [guitarPlayerNode scheduleEntireFilePrimeAndStartImmediately];
+        
     [bandPlayerNode unschedule];
     [bandPlayerNode scheduleEntireFilePrimeAndStartImmediately];
+}
+
+- (IBAction)playPauseAction:(id)sender {
+    AudioTimeStamp currentPlayTime = [guitarPlayerNode currentPlayTime];
+    if ([guitarPlayerNode isPlaying]) {
+        [guitarPlayerNode rescheduleEntireFileBeginningAtPlaybackTime:currentPlayTime];
+        [bandPlayerNode rescheduleEntireFileBeginningAtPlaybackTime:currentPlayTime];
+        [playPauseButton setTitle:@"Play" forState:UIControlStateNormal];
+    } else {
+        [guitarPlayerNode setStartTimeStampImmediately];
+        [bandPlayerNode setStartTimeStampImmediately];
+        [playPauseButton setTitle:@"Pause" forState:UIControlStateNormal];
+    }
 }
 
 - (IBAction)distortionAction:(id)sender {

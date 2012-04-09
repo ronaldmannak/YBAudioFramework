@@ -33,15 +33,31 @@
 - (void)setFileURL:(NSURL *)fileURL typeHint:(AudioFileTypeID)typeHint;
 
 /**
+     Read-only property containing the player's current playback time,
+     offset from the beginning of the file.
+ */
+@property (nonatomic, readonly) AudioTimeStamp currentPlayTime;
+
+/**
 	Convenience method to set the entire file as scheduled region,
     prime the buffers of the player and set the start time stamp as `now`.
  */
 - (void)scheduleEntireFilePrimeAndStartImmediately;
 
 /**
-    Convenience method to unschedule previously scheduled regions.
+    Convenience method to unschedule the current region and schedule from the specified
+    time up to the end of the file. This can be used to `pause` the player unit by giving
+    the current playback time. To `continue` playback after `pausing`, send -setStartTimeStampImmediately.
  */
-- (void)unschedule;
+- (void)rescheduleEntireFileBeginningAtPlaybackTime:(AudioTimeStamp)timestamp;
+
+/**
+    Convenience method to unschedule and reschedule the entire file beginning at the current
+    playback time. This can be used to `pause` the player unit at the current position.
+    To `continue` playback after `pausing`, send -setStartTimeStampImmediately.
+    @see -rescheduleEntireFileBeginningAtPlaybackTime:
+ */
+- (void)rescheduleEntireFileBeginningAtCurrentPlaybackTime;
 
 /**
     Methods to set and get the region of the file that is scheduled for playback.

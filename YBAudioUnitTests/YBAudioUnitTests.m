@@ -153,7 +153,16 @@ YBAudioUnitNode* node = [graph addNodeWithType:type];
     [playerNode scheduleEntireFilePrimeAndStartImmediately];
     [graph start];
     // Let it play for a very short time:
-    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.1]];
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.05]];
+    STAssertTrue([playerNode isPlaying], nil);
+    // `Pause`:
+    [playerNode rescheduleEntireFileBeginningAtCurrentPlaybackTime];
+    STAssertTrue([playerNode isPlaying] == NO, nil);
+    // `Continue`:
+    [playerNode setStartTimeStampImmediately];
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.05]];
+    STAssertTrue([playerNode isPlaying], nil);
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.05]];
 }
 
 - (void)testMixerUnit {

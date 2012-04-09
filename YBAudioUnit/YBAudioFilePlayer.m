@@ -17,9 +17,27 @@
 @implementation YBAudioFilePlayer {
     AudioFileID _audioFileID;
     ScheduledAudioFileRegion _region;
+    AudioStreamBasicDescription _fileASBD;
+    UInt64 _filePacketsCount;
 }
 
-@synthesize fileURL = _fileURL;
+/**
+    Overriden because kAudioUnitProperty_CurrentPlayTime is the playTime relative to the mStartFrame,
+    while it often makes more sense to have the time from the beginning of the file.
+    In case the player is stopped (currentPlayTime == -1.) the mStartFrame of the current region is
+    reported back, which often makes sense as this is often used as the cue point at which the player is `paused`.
+ */
+- (AudioTimeStamp)currentPlayTime {
+    AudioTimeStamp currentPlayTime;
+    UInt32 dataSize = sizeof(currentPlayTime);
+    YBAudioThrowIfErr(AudioUnitGetProperty(_auAudioUnit, kAudioUnitProperty_CurrentPlayTime, kAudioUnitScope_Global, 0, &currentPlayTime, &dataSize));
+    if (currentPlayTime.mSampleTime == -1.) {
+        currentPlayTime.mSampleTime = 0;
+    }
+    currentPlayTime.mFlags = kAudioTimeStampSampleTimeValid;
+    currentPlayTime.mSampleTime += _region.mStartFrame;
+    return currentPlayTime;
+}
 
 - (void)setFileURL:(NSURL *)fileURL {
     [self setFileURL:fileURL typeHint:0];
@@ -41,6 +59,14 @@
     if (_fileURL) {
         YBAudioThrowIfErr(AudioFileOpenURL((__bridge CFURLRef)fileURL, kAudioFileReadPermission, typeHint, &_audioFileID));
         YBAudioThrowIfErr(AudioUnitSetProperty(_auAudioUnit, kAudioUnitProperty_ScheduledFileIDs, kAudioUnitScope_Global, 0, &_audioFileID, sizeof(AudioFileID)));
+        
+        // Get number of audio packets in the file:
+        UInt32 propsize = sizeof(_filePacketsCount);
+        YBAudioThrowIfErr(AudioFileGetProperty(_audioFileID, kAudioFilePropertyAudioDataPacketCount, &propsize, &_filePacketsCount));
+        
+        // Get file's asbd:
+        propsize = sizeof(_fileASBD);
+        YBAudioThrowIfErr(AudioFileGetProperty(_audioFileID, kAudioFilePropertyDataFormat, &propsize, &_fileASBD));
     }
 }
 
@@ -50,35 +76,36 @@
     [self setStartTimeStampSampleTime:-1.];
 }
 
-- (void)unschedule {
-    [self reset];
+- (void)resetRegionToEntireFileWithStartFrame:(SInt64)startFrame {
+    _region.mTimeStamp.mFlags = kAudioTimeStampSampleTimeValid;
+    _region.mTimeStamp.mSampleTime = 0; /* Relative to graph's time line */
+    _region.mAudioFile = _audioFileID;
+    _region.mLoopCount = 0;
+    _region.mStartFrame = startFrame;
+    _region.mFramesToPlay = (_filePacketsCount * _fileASBD.mFramesPerPacket) - startFrame;
+}
+
+- (void)rescheduleEntireFileBeginningAtPlaybackTime:(AudioTimeStamp)timestamp {
+    [self unschedule];
+    NSAssert((timestamp.mFlags & kAudioTimeStampSampleTimeValid), nil);
+    [self resetRegionToEntireFileWithStartFrame:timestamp.mSampleTime];
+    YBAudioThrowIfErr(AudioUnitSetProperty(_auAudioUnit, kAudioUnitProperty_ScheduledFileRegion, kAudioUnitScope_Global, 0, &_region, sizeof(_region)));
+    [self primeBuffers];
+}
+
+- (void)rescheduleEntireFileBeginningAtCurrentPlaybackTime {
+    [self rescheduleEntireFileBeginningAtPlaybackTime:self.currentPlayTime];
 }
 
 - (void)setRegionEntireFile {
-    // Get number of audio packets in the file:
-    UInt64 nPackets = 0;
-    UInt32 propsize = sizeof(UInt64);
-    YBAudioThrowIfErr(AudioFileGetProperty(_audioFileID, kAudioFilePropertyAudioDataPacketCount, &propsize, &nPackets));
-    
-    // Get file's asbd:
-    AudioStreamBasicDescription fileASBD = {0};
-    propsize = sizeof(fileASBD);
-    YBAudioThrowIfErr(AudioFileGetProperty(_audioFileID, kAudioFilePropertyDataFormat, &propsize, &fileASBD));
-    
-    // Tell the file player AU to play the entire file and with which point in the graph's time it should start (at time 0)
-    // This makes sure the players start at the same time and stay perfectly sync.
-    _region.mTimeStamp.mFlags = kAudioTimeStampSampleTimeValid;
-    _region.mTimeStamp.mSampleTime = 0;
-    _region.mAudioFile = _audioFileID;
-    _region.mLoopCount = 0;
-    _region.mStartFrame = 0;
-    _region.mFramesToPlay = nPackets * fileASBD.mFramesPerPacket;
-    
+    [self resetRegionToEntireFileWithStartFrame:0];
     YBAudioThrowIfErr(AudioUnitSetProperty(_auAudioUnit, kAudioUnitProperty_ScheduledFileRegion, kAudioUnitScope_Global, 0, &_region, sizeof(_region)));
 }
 
 - (void)setRegion:(ScheduledAudioFileRegion*)region {
-    memcpy(&_region, region, sizeof(_region));
+    if (region != &_region) {
+        memcpy(&_region, region, sizeof(_region));
+    }
     YBAudioThrowIfErr(AudioUnitSetProperty(_auAudioUnit, kAudioUnitProperty_ScheduledFileRegion, kAudioUnitScope_Global, 0, &_region, sizeof(_region)));
 }
 
@@ -98,7 +125,7 @@
 - (id)initWithAUNode:(AUNode)auNode audioUnit:(AudioUnit)auAudioUnit inGraph:(YBAudioUnitGraph *)graph {
     self = [super initWithAUNode:auNode audioUnit:auAudioUnit inGraph:graph];
     if (self) {
-        
+
     }
     return self;
 }
@@ -107,4 +134,5 @@
     [self setFileURL:nil typeHint:0];
 }
 
+@synthesize fileURL = _fileURL;
 @end
