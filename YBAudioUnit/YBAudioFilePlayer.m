@@ -74,7 +74,11 @@
         propsize = sizeof(_fileASBD);
         AudioUnitGetProperty(_auAudioUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Output, 0, &_unitASBD, &propsize);
         
-        _sampleRateRatio = _unitASBD.mSampleRate / _fileASBD.mSampleRate;
+        if (_fileASBD.mSampleRate > 0 && _unitASBD.mSampleRate > 0) {
+            _sampleRateRatio = _unitASBD.mSampleRate / _fileASBD.mSampleRate;
+        } else {
+            _sampleRateRatio = 1.;
+        }
     }
 }
 
@@ -133,7 +137,7 @@
 - (id)initWithAUNode:(AUNode)auNode audioUnit:(AudioUnit)auAudioUnit inGraph:(YBAudioUnitGraph *)graph {
     self = [super initWithAUNode:auNode audioUnit:auAudioUnit inGraph:graph];
     if (self) {
-
+        _sampleRateRatio = 1.;
     }
     return self;
 }
